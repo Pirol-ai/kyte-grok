@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "kyte": {
+      "type": "stdio",
+      "command": "kyte",
+      "args": ["mcp", "--db", "~/.kyte/grok"],
+      "startup_timeout_sec": 60,
+      "tool_timeout_sec": 120
+    }
+  }
+}

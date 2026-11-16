@@ -1,0 +1,24 @@
+{
+  "name": "kyte-grok",
+  "description": "kyte — the company OS by Pirol Labs — for Grok Build",
+  "owner": {
+    "name": "Pirol Labs",
+    "url": "https://pirol.ai"
+  },
+  "plugins": [
+    {
+      "name": "kyte",
+      "description": "Your company's kyte workspace in Grok: customers, contacts, deals, projects, hours, invoices, goals, people and documents — read and changed as you, under your permissions. Served by the kyte program on your own computer.",
+      "category": "productivity",
+      "source": {
+        "type": "local",
+        "path": "./plugins/kyte"
+      },
+      "homepage": "https://kyte.pirol.ai/docs/en/mcp/",
+      "keywords": ["kyte", "kyte workspace", "pirol kyte", "company os"],
+      "domains": ["kyte.pirol.ai", "pirol.ai"],
+      "version": "0.1.0",
+      "author": "Pirol Labs"
+    }
+  ]
+}
