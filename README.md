@@ -11,7 +11,7 @@ role may change.
 
 ## What you need
 
-The **kyte command line**, version 0.1.1227 or newer, installed and signed in once:
+The **kyte command line**, installed and signed in once:
 
 1. Install it — macOS and Linux: `curl -fsSL https://updates.pirol.ai/cli/install.sh | sh`
    ([what the installer does](https://kyte.pirol.ai/docs/en/mcp/)). `kyte --version` says whether
@@ -19,9 +19,10 @@ The **kyte command line**, version 0.1.1227 or newer, installed and signed in on
 2. Sign in for this plugin's own folder: `kyte login --db ~/.kyte/grok`
 
 The folder is this connection's own copy of the workspace, kept apart from any kyte session you
-run in a terminal, so the two never compete for one database. kyte expands the leading `~`
-itself — that is what the version floor is for; an older kyte would open a folder literally
-named `~`.
+run in a terminal, so the two never compete for one database. Grok expands the leading `~` before
+it starts the server — measured, not assumed — and kyte expands it a second time if it ever
+arrives unexpanded. `check.sh` looks for a folder literally named `~`, which is what a lost
+expansion leaves behind.
 
 ## Install
 
@@ -77,11 +78,14 @@ On Windows, name the program in full:
 every path leads somewhere, that the server line and the prose name the same folder, and that the
 skill carries no installer pipeline.
 
-`sh check.sh` walks the real path in a throwaway `GROK_HOME` and a throwaway `HOME`, so neither
-your Grok nor your workspace is touched: it adds this marketplace, installs the plugin, looks at
-the server Grok registered, and talks to that server. It needs `grok`, `node` and `kyte` on the
-machine. `node scripts/mcp-probe.mjs` is the last step on its own — it starts the server straight
-from `.mcp.json` and prints the tools it serves, without Grok.
+`sh check.sh` walks the real path in a throwaway `HOME`, so neither your Grok nor your workspace
+is touched: `grok plugin validate`, then the marketplace, the install, `grok inspect` for **both**
+halves — a skill with no server is a manual for tools that do not exist, a server with no skill is
+the other way round — and `grok mcp doctor` for the handshake. It needs `grok`, `node` and `kyte`
+on the machine.
+
+`node scripts/mcp-probe.mjs` is that last step without Grok: it starts the server straight from
+`.mcp.json` and prints the tools it serves.
 
 ## Support
 

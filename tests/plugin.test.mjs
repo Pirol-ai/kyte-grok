@@ -7,7 +7,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -42,6 +42,14 @@ test("every path in the plugin manifest leads somewhere", () => {
     assert.ok(path, "the manifest leaves out a path the plugin needs");
     assert.ok(existsSync(join(root, PLUGIN, path)), `${path} does not exist`);
   }
+
+  // A folder that exists but holds no SKILL.md leaves Grok with "Skills (None)" and no complaint
+  // anywhere — the plugin installs, the server runs, and the model is simply never told how to
+  // work in a kyte workspace.
+  const skills = readdirSync(join(root, PLUGIN, manifest.skills), { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .filter((entry) => existsSync(join(root, PLUGIN, manifest.skills, entry.name, "SKILL.md")));
+  assert.ok(skills.length > 0, `${manifest.skills} holds no skill`);
 });
 
 test("the server is started as kyte mcp on its own folder", () => {
@@ -55,6 +63,9 @@ test("the server is started as kyte mcp on its own folder", () => {
 
   // The handshake opens an encrypted replica, which takes longer than Grok's default 30 s on a
   // cold start. Nothing says so when it is too short: the server is simply dropped.
+  //
+  // The tilde is left for Grok to expand, which it does before it starts the server. kyte expands
+  // it a second time (0.1.1227 and newer) should it ever arrive unexpanded.
   assert.ok(server.startup_timeout_sec >= 60, "the server gets too little time to come up");
 });
 
